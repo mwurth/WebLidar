@@ -8,21 +8,52 @@
 body{margin:auto; background-color: #888; padding-top: 50px; font-family:sans; color: #666; font-size: 0.8em}
 #container{ margin:auto; width: 1080px; padding: 10px; background-color: #000; border-radius: 5px; -webkit-box-shadow: 5px 5px 2px #444; }
 </style>
+  <link href="js/jquery-ui.css" rel="stylesheet" type="text/css"/> 
+      <script src="js/jquery-ui.min.js"></script>
 </head>
 <body>
 
     <div id="container">
         <canvas id="canvas" width="1080" height="720"></canvas>
-        <div id="framerate" style="position:absolute; left: 750px; top: 20px; background-color: #000; opacity: 0.5;height: 30px; width: 130px; border-radius: 5px;	-moz-border-radius5px;-webkit-border-radius:5px;border: 1px solid #fff;">
+        <div id="framerate" style="position:absolute; left: 200px; top: 20px; background-color: #000; opacity: 0.5;height: 30px; width: 700px; border-radius: 5px;	-moz-border-radius5px;-webkit-border-radius:5px;border: 1px solid #fff;">
             <div id="debug" style="padding: 5px"></div>
         </div>
         <div id="details">
         <h1>WebGL LiDAR Rendering</h1>
-        <p>An example of using WebGL to render a LiDAR point cloud. </p>
+            <p>Move (WASD) to load data!<table>
+                <tr><td>First Returns:</td><td style="width:80px">&nbsp;</td><td style="background-color: #fff; width:300px"><div id="slider1" class="sldr"></div></td></tr>
+                <tr><td>Second Returns:</td><td><input id='second' type="checkbox"></td><td style="background-color: #70E01B; width:300px"><div id="slider2" class="sldr"></div></td></tr>
+                <tr><td>Third Returns:</td><td><input id='third' type="checkbox"></td><td style="background-color: #F0F711; width:300px"><div id="slider3" class="sldr"></div></td></tr>
+                <tr><td>Fourth Returns:</td><td><input id='fourth' type="checkbox"></td><td style="background-color: #f00; width:300px"><div id="slider4" class="sldr"></div></td></tr></table></p>
+            <p><input id='jumpx'><input id='jumpy'><input type='button' id='jump'>
 
     </div>
 </div>
-
+     <script type="text/javascript">
+     $(document).ready(function() {
+                        $(".sldr").slider();
+                        $(".sldr").slider({ min: 0 });
+                       $(".sldr").slider({ max: 100 });
+                       $( "#slider1" ).slider( "option", "value", Math.round(100 * XMLdoc.getElement("first").getAlpha()) );
+                       $( "#slider1" ).bind( "slidechange", function(event, ui) { XMLdoc.getElement("first").setAlpha($(this).slider( "option", "value" )/100);});
+         $( "#slider2" ).slider( "option", "value", Math.round(100 * XMLdoc.getElement("second").getAlpha()) );
+         $( "#slider2" ).bind( "slidechange", function(event, ui) { XMLdoc.getElement("second").setAlpha($(this).slider( "option", "value" )/100);});
+         $( "#slider3" ).slider( "option", "value", Math.round(100 * XMLdoc.getElement("third").getAlpha()) );
+         $( "#slider3" ).bind( "slidechange", function(event, ui) { XMLdoc.getElement("third").setAlpha($(this).slider( "option", "value" )/100);});
+         $( "#slider4" ).slider( "option", "value", Math.round(100 * XMLdoc.getElement("fourth").getAlpha()) );
+         $( "#slider4" ).bind( "slidechange", function(event, ui) { XMLdoc.getElement("fourth").setAlpha($(this).slider( "option", "value" )/100);});
+         
+                       
+   $("#jump").click(function() {
+                  var scene = XMLdoc.getElement( "mainscene" );
+                   
+                   var camera=scene.camera;
+                   camera.setLocX( $("#jumpx").val() );
+                   camera.setLocY( $("#jumpy").val() );
+                   });
+    });
+         
+                   </script>
 <script id="glge_document" type="text/xml">
 	<glge>
 		<!--
@@ -55,6 +86,14 @@ body{margin:auto; background-color: #888; padding-top: 50px; font-family:sans; c
 		<material id="black" specular="0" color="#444" alpha="1.0" emit="1" />
 		<material id="white" specular="0" color="#fff" alpha="1.0" emit="1" />
 		<material id="gray" specular="0" color="#333" aplha="1.0" emit="1" />
+    
+    
+    
+  		<material id="first"  specular="0" color="#fff" alpha=".8" emit="1" />
+  		<material id="second" specular="0" color="#70E01B" alpha="0.7" emit="1" />
+        <material id="third"  specular="0" color="#F0F711" alpha="0.7" emit="1" />
+        <material id="fourth" specular="0" color="#f00" alpha="1.0" emit="1" />
+
 		<!--
 		Since we want our graph spining within our scene we have two choices we can manually set it up 
 		to do so in javascript or alternativly GLGE provides a declaritve was of specify both complex and simple
@@ -89,7 +128,7 @@ body{margin:auto; background-color: #888; padding-top: 50px; font-family:sans; c
 			-->
 <!--			<camera id="mainCamera" loc_z="141" loc_y="253"  rot_x="-0.3"  /> -->
 
-			<camera id="mainCamera" loc_x="312" loc_y="2213" loc_z="100" rot_order="ROT_XZY" rot_z="0" rot_x=".3" rot_y="0" />
+			<camera id="mainCamera" loc_x="1055" loc_y="1577" loc_z="725" rot_order="ROT_XZY" rot_z="-0.6" rot_x="1.5" rot_y="4.8" />
 		</scene>
 	</glge>
 </script>
@@ -196,7 +235,7 @@ XMLdoc.onLoad = function(){
 	    	camera.setLocY(camerapos.y+yinc*0.05*(now-lasttime));
 	    	camera.setLocX(camerapos.x+xinc*0.05*(now-lasttime));
 	    	camera.setLocZ(camerapos.z+zinc*0.05*(now-lasttime));
-                    addDatapoints(camerapos.x, camerapos.y)
+                   // addDatapoints(camerapos.x, camerapos.y)
             var xext=0;
             for (xext=-5;xext<=5;xext++) {
                 var yext=0;
@@ -216,6 +255,7 @@ XMLdoc.onLoad = function(){
 	var white=XMLdoc.getElement( "white" );
 	var gray=XMLdoc.getElement( "gray" );
 	var graph=XMLdoc.getElement( "graph" );
+
 	
 	
 	/**
@@ -276,9 +316,11 @@ XMLdoc.onLoad = function(){
     start=parseInt(new Date().getTime());
     var cnt=0;
     function render(){
+        var fcamerapos =scene.camera.getPosition();
+        var fcamerarot = scene.camera.getRotation();
         now=parseInt(new Date().getTime());
 	    frameratebuffer=Math.round(((frameratebuffer*9)+1000/(now-lasttime))/10);
-	    document.getElementById("debug").innerHTML="Frame Rate:"+frameratebuffer;
+	    document.getElementById("debug").innerHTML="Frame Rate:"+frameratebuffer + " x: " + fcamerapos.x + " y: "+ fcamerapos.y + " z: " + fcamerapos.z +  + " xr: " + fcamerarot.x + " yr: "+ fcamerarot.y + " zr: " + fcamerarot.z;;
         mouselook();
         checkkeys();
         renderer.render();
@@ -298,7 +340,7 @@ XMLdoc.parseScript("glge_document");
 
 </script>
     <script type="text/javascript">
-        var tiles = ['empty'];
+        var tiles = ['empty'];        
         
         function PadDigits(n, totalDigits) 
         { 
@@ -317,34 +359,50 @@ XMLdoc.parseScript("glge_document");
        function addDatapoints(xpos, ypos) {
                   var xvalue = PadDigits(Math.floor(xpos/100),3);
                   var yvalue = PadDigits(Math.floor(ypos/100),3);
-                  var fname = "tiles/" + xvalue + "x" + yvalue + ".json";
-                  var getit = 1;
-                  for (i in tiles) {
-
-                      if (tiles[i] == fname) {
-                          getit=0
-                      };
-                  };
-            if (getit == 1) {
-            tiles.push(fname)
-
-                  var jqxhr = $.getJSON(fname, function(data, textStatus) {
-                                        
-                                        var lidar=(new GLGE.Object).setDrawType(GLGE.DRAW_POINTS);
-                                        lidar.setMesh((new GLGE.Mesh).setPositions(data));
-                                        lidar.setPointSize(1);
-                                        lidar.setMaterial(XMLdoc.getElement( "white" ));
-                                        lidar.setZtransparent(true);
-                                        XMLdoc.getElement( "graph" ).addObject(lidar);
-
-                                        $("body").append("<p>" + fname + " " + textStatus + "</p>");
-                                        })
-                  .error(function(event, request, settings){
-                         $("#console").prepend("<li>Error requesting " + fname + "</li>");
-                         })
-                  .complete(function() { });
-            };              
+                          addTile(xvalue,yvalue,1)
+           if ($('#second').is(':checked')) {
+               addTile(xvalue,yvalue,2)
+           };
+           if ($('#third').is(':checked')) {
+               addTile(xvalue,yvalue,3)
+           };
+           if ($('#fourth').is(':checked')) {
+               addTile(xvalue,yvalue,4)
+           };
        };
+        
+        function addTile(xvalue,yvalue,nrefl) {            
+            var fname = "tiles/" + xvalue + "x" + yvalue + "-" + nrefl + ".json";
+            var getit = 1;
+            for (i in tiles) {
+                if (tiles[i] == fname) {
+                    getit=0
+                };
+            };
+            if (getit == 1) {
+                tiles.push(fname)
+                var jqxhr = $.getJSON(fname, function(data, textStatus) {                                        
+                                      var lidar=(new GLGE.Object).setDrawType(GLGE.DRAW_POINTS);
+                                      lidar.setMesh((new GLGE.Mesh).setPositions(data));
+                                      lidar.setPointSize(1);
+                                      var omaterial =  XMLdoc.getElement( "white" );
+                                      if (nrefl == 4) {omaterial = XMLdoc.getElement("fourth"); } 
+                                      else if  (nrefl == 2) {omaterial = XMLdoc.getElement("second"); } 
+                                    else if  (nrefl == 3) {omaterial = XMLdoc.getElement("third"); } 
+                                      else if (nrefl == 1) {omaterial = XMLdoc.getElement("first"); }
+                                      else {alert(nrefl);}; 
+
+                                      lidar.setMaterial(omaterial);
+                                      lidar.setZtransparent(true);
+                                      
+                                      XMLdoc.getElement( "graph" ).addObject(lidar);                                      
+                                    //  $("body").append("<p>" + fname + " " + textStatus + "</p>");
+                                      })
+                .error(function(event, request, settings){
+                     //  $("#console").prepend("<li>Error requesting " + fname + "</li>");
+                       });
+            };              
+        };
         
         </script>     
     
