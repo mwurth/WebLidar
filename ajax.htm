@@ -1,0 +1,47 @@
+<html>                                                                  
+ <head>
+ <title>Ajax Test</title>
+ <script type="text/javascript" src="jquery.js"></script>
+ <script type="text/javascript">
+     function PadDigits(n, totalDigits) 
+    { 
+        n = n.toString(); 
+        var pd = ''; 
+        if (totalDigits > n.length) 
+        { 
+            for (i=0; i < (totalDigits-n.length); i++) 
+            { 
+                pd += '0'; 
+            } 
+        } 
+        return pd + n.toString(); 
+    };
+                                          
+ $(document).ready(function() {
+   // use this to reset several forms at once
+   $("#get").click(function() {
+    var xvalue = PadDigits(Math.floor(parseFloat($("#px").val())/100),3);
+    var yvalue = PadDigits(Math.floor(parseFloat($("#py").val())/100),3);
+    fname = "tiles/" + xvalue + "x" + yvalue + ".json";
+
+   var jqxhr = $.getJSON(fname, function(data, textStatus) {
+   $("body").append("<p>" + fname + " " + textStatus + "</p>");
+})
+.error(function(event, request, settings){
+  $("body").append("<li>Error requesting " + fname + "</li>");
+})
+.complete(function() { });
+    
+   });
+ });
+ 
+ </script>                                                               
+ </head>                                                                 
+ <body>                                                                  
+   <!-- we will add our HTML content here -->
+   <input type=text id=px value="312"/>
+   <input type=text id=py value="312"/>
+   <input type=button id=get />
+   <p id="out"></p>
+ </body>                                                                 
+ </html>
